@@ -1,0 +1,12 @@
+<?php
+declare(strict_types=1);
+$f = 2;
+if(10){
+$z = "ahoj";
+}
+else{
+$f = 1;
+    
+}
+
+?>

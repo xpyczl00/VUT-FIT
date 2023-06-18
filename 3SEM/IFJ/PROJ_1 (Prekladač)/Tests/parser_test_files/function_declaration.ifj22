@@ -1,0 +1,9 @@
+<?php
+declare(strict_types=1);
+
+function bara(string $param,string $pes,int $a) : string {
+$x = 2;
+return "LOL";
+}
+
+?>

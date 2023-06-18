@@ -1,0 +1,8 @@
+<?php
+declare(strict_types=1);
+
+functions bar( $param) : string {
+return foo($param);
+
+
+?>

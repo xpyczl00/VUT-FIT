@@ -1,0 +1,12 @@
+<?php
+declare(strict_types=1);
+
+function bar(string $param) : int {
+return 15;
+}
+
+function bar(string $param) : int {
+return 10;
+}
+
+?>

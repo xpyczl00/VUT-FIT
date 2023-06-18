@@ -1,0 +1,10 @@
+<?php
+declare(strict_types=1);
+
+whale(5>2){
+   while(5>2){
+    
+} 
+}
+
+?>
