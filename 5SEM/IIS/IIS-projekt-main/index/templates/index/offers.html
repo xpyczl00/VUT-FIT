@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="sk" style="height: 110%">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{% static 'index/images/favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Zelný trh - Ponuka</title>
+</head>
+<body style="background: rgb(4,36,0);
+background: linear-gradient(176deg, rgba(4,36,0,1) 0%, rgba(45,121,9,1) 40%, rgba(159,255,0,1) 100%);">
+    <header>
+        <div  class="site_head" id="site_head">
+            <div><a class="LOGO" href="{% url 'index:index' %}">ZELNÝ TRH</a></div>
+        {% if logged_in %}
+            <div><a href="{% url 'index:login' %}"><span class="button">Odhlásenie</span></a></div>
+        {% else %}
+            <div><a href="{% url 'index:login' %}"><span class="button" >Login</span></a></div>
+        {% endif %}
+        </div>
+        <nav>
+            <a href="{% url 'index:harvests' %}"><span class="button">Zbery</span></a>
+            {% if logged_in %}
+                <a href="{% url 'index:cart' %}"><span class="button">Košík</span></a>
+                <a href="{% url 'index:profile' %}"><span class="button">Profil</span></a>
+            {% endif %}
+        </nav>
+    <br><br><br>
+    </header>
+    <main>
+        <div id="filter" >
+            <form>
+                <input type="submit" value="Filtrovať" class="button">
+                <input type="submit" value="Vyčistiť" class="button"><br>
+                {% if categories %}
+                    {% for category in categories %}
+                        <label class="container">
+                        <input type="checkbox" value="{{ category.id }}" name="filter">
+                        <span class="checkmark">{{ category.category_name }}</span>
+                        </label>
+                    {% endfor %}
+                <select id="sort" name="sort">
+                    <option value="ascend"> Podľa ceny - Vzostupne</option>
+                    <option value="descend"> Podľa ceny - Zostupne</option>
+                </select>
+                {% else %}
+                    <label>Neexistuju žiadne položky vyhovojúce danym kritériam.</label>
+                {% endif %}
+            </form>
+        </div>
+        <div>
+            {% if crops %}
+                <ul id="grid_show">
+                {% for crop in crops %}
+                    {% if crop.price_type != 'zber'  %}
+                    <li><a href="{% url 'index:product_detail' crop.id %}">
+                                <div class="crop">
+                                    {% load static %}
+                                    <img src="{% static 'index/images/crops.png' %}" alt="Crop" width="100" height="100">
+                                    <span class="crop_name">
+                                        {{ crop.crop_name }}
+                                    </span>
+                                    <span class="crop_description">
+                                        Popis: {{ crop.description }}
+                                    </span>
+                                    <span class="crop_price">
+                                        Cena: {{ crop.price }} eur
+                                    </span>
+                                </div>
+                            </a></li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            {% else %}
+                <br>
+                <h1>Filtru nevyhovujú žiadne produkty.</h1>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>

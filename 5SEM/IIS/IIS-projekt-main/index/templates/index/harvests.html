@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="sk" style="height: 140%">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{% static 'index/images/favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Zelný trh - Zbery</title>
+</head>
+<body>
+    <header>
+       <div  class="site_head" id="site_head">
+           <div><a class="LOGO" href="{% url 'index:index' %}">ZELNÝ TRH</a></div>
+        {% if logged_in %}
+            <div><a href="{% url 'index:login' %}"><span class="button">Odhlásenie</span></a></div>
+        {% else %}
+            <div><a href="{% url 'index:login' %}"><span class="button" >Login</span></a></div>
+        {% endif %}
+        </div>
+        <nav>
+            <a href="{% url 'index:offers' %}"><span class="button">Ponuka</span></a>
+            {% if logged_in %}
+                <a href="{% url 'index:cart' %}"><span class="button">Košík</span></a>
+                <a href="{% url 'index:profile' %}"><span class="button">Profil</span></a>
+            {% endif %}
+        </nav>
+    </header>
+    <main>
+            {% if error %}
+                <div class="message">{{ error }}</div>
+            {% endif %}
+        <div class="showcase" id="all_harvests">
+            <h1>Najbližšie zbery:</h1>
+            {% if harvests %}
+                    <ul id="grid_show">
+                        {% for harvest in harvests %}
+                            <li><a href="{% url 'index:harvest_detail' harvest.id %}">
+                                <div class = "harvest">
+                                    <label class="harvest_date">
+                                       Dátum: {{ harvest.date }}
+                                    </label>
+                                    <label  class="harvest_place">
+                                        Miesto: {{ harvest.place }}
+                                    </label>
+                                    <label  class="harvest_description">
+                                        Popis: {{ harvest.description }}
+                                    </label>
+                                    <label  class="harvest_max">
+                                        Maximum: {{ harvest.max_occupancy }} osôb {% if attending %} <span style="color: blue">-Prihlaseny </span>{% endif %}
+                                    </label>
+                                    <label  class="harvest_current">
+                                        Zúčastnených: {{ harvest.current_occupancy }} osôb
+                                    </label>
+                                    <label  class="harvest_crop">
+                                        Plodina: {{ harvest.crop }}
+                                    </label>
+                                    <label  class="harvest_farmer">
+                                        Farmár: {{ harvest.farmer }}
+                                    </label>
+                                </div>
+                            </a></li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div>Neexistuju žiadne položky vyhovojúce danym kritériam.</div>
+                {% endif %}
+        </div>
+        <div class="showcase" id="all_harvests">
+            <h1>Moje zbery:</h1>
+                {% if farmer %}
+                <a href="{% url 'index:new_harvest' 0 %}">
+                    <button class="button">Pridať zber</button>
+                </a>
+                {% endif %}
+
+            {% if my_harvests %}
+                <ul id="grid_show" class="harvests">
+                    {% for harvest in my_harvests %}
+                        <li class="harvests">
+                                    <a href="{% url 'index:harvest_detail' harvest.id %}">
+                             <div class = "harvest">
+                                    <label class="harvest_date">
+                                       Dátum: {{ harvest.date }}
+                                    </label>
+                                    <label  class="harvest_place">
+                                        Miesto: {{ harvest.place }}
+                                    </label>
+                                    <label  class="harvest_description">
+                                        Popis: {{ harvest.description }}
+                                    </label>
+                                    <label  class="harvest_crop">
+                                        Plodina: {{ harvest.crop }}
+                                    </label>
+                             </div>
+                        </a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div>Neexistuju žiadne položky vyhovojúce danym kritériam.</div>
+            {% endif %}
+        </div>
+    <div class="showcase" id="all_harvests">
+            <h1>Prihlásené zbery:</h1>
+            {% if attending_harvest %}
+                <ul class="harvests" id="grid_show">
+                    {% for harvest in attending_harvest %}
+                        <li>
+                                    <a href="{% url 'index:harvest_detail' harvest.id %}">
+                             <div class = "harvest">
+                                    <label class="harvest_date">
+                                       Dátum: {{ harvest.date }}
+                                    </label>
+                                    <label  class="harvest_place">
+                                        Miesto: {{ harvest.place }}
+                                    </label>
+                                    <label  class="harvest_description">
+                                        Popis: {{ harvest.description }}
+                                    </label>
+                                    <label  class="harvest_crop">
+                                        Plodina: {{ harvest.crop }}
+                                    </label>
+                             </div>
+                        </a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div>Neexistuju žiadne položky vyhovojúce danym kritériam.</div>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>

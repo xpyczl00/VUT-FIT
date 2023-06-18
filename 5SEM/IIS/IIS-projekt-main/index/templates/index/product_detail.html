@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="sk" style="height: 110%">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{% static 'index/images/favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Zelný trh - Detail produktu</title>
+</head>
+<body>
+    <header>
+        <div  class="site_head" id="site_head">
+            <div><a class="LOGO" href="{% url 'index:index' %}">ZELNÝ TRH</a></div>
+        {% if user %}
+            <div><a href="{% url 'index:login' %}"><span class="button">Odhlásenie</span></a></div>
+        {% else %}
+            <div><a href="{% url 'index:login' %}"><span class="button" >Login</span></a></div>
+        {% endif %}
+        </div>
+        <nav>
+            <a href="{% url 'index:offers' %}"><span class="button">Ponuka</span></a>
+            <a href="{% url 'index:harvests' %}"><span class="button">Zbery</span></a>
+            {% if user %}
+                <a href="{% url 'index:cart' %}"><span class="button">Košík</span></a>
+                <a href="{% url 'index:profile' %}"><span class="button">Profil</span></a>
+            {% endif %}
+        </nav>
+    </header>
+    <main>
+            {% if error %}
+                <div class="message">{{ error }}</div>
+            {% endif %}
+        {% if crop %}
+            <div class="crop">
+                <img src="{% static 'index/images/crops.png' %}" alt="Crop" width="100" height="100">   <br>
+                <label class="crop_name">
+                    {{ crop.crop_name }}   <br>
+                </label>
+                <label class="crop_description">
+                    Popis: {{ crop.description }}<br>
+                </label>
+                <label class="crop_price">
+                    Cena: {{ crop.price }}€<br>
+                </label>
+                {% if crop.price_type == "perkg" %}
+                    <label class="crop_weight">
+                        Váha: {{ crop.amount }}kg<br>
+                    </label>
+                {% else %}
+                    <label class="crop_pieces">
+                        Kusov: {{ crop.amount }}pc<br>
+                    </label>
+                {% endif %}
+                <label class="crop_origin">
+                    Zem pôvodu: {{ crop.origin }}<br>
+                </label>
+            </div>
+            {% if user and not farmer %}
+                {% if crop.price_type != "zber" %}
+                    <form method="post" >
+                    {% csrf_token %}
+                        <input type="number" name="amount" value="0" min="1" max="1000">
+                        <input class="button" type="submit" name="add_to_cart" value="Pridať do košíka">
+                    </form>
+                {% endif %}
+                    {%  if reviewable %}
+                        <a href="{% url 'index:new_review' crop.id %}"><span class="button">Vytvoriť hodnotenie</span></a>
+                    {% endif %}
+            {% endif %}
+
+            {% if user and farmer %}
+                <a href="{% url 'index:new_crop' crop.id %}"><span class="button">Upraviť</span></a>
+                <form method="post" action="{% url 'index:product_detail' crop.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button" name="delete" onclick="return confirm('Naozaj chcete zrušiť túto plodinu');">
+                        Zmazať plodinu
+                    </button>
+                </form>
+            {% endif %}
+
+            <h1>Hodnotenia:</h1>
+
+            {% if reviews %}
+
+                <div id="crop_reviews">
+                    {% for review in reviews %}
+                        <div class="review" id="review">
+                            <span class="title_stars" id="title_stars">{{ review.short_desc }}</span>
+                            <span>{{ review.long_desc }}</span>
+                            <span class="title_stars" id="title_stars">{{ review.stars }}/5</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div>
+                    <label>Plodina zatiaľ nemá žiadne hodnotenia</label>
+                </div>
+            {% endif %}
+        {% endif %}
+    </main>
+</body>
+</html>

@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="sk" style="height: 110%">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{% static 'index/images/favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Zelný trh - Login</title>
+</head>
+<body>
+    <header>
+        <div class="site_head" id="site_head">
+            <div><a class="LOGO" href="{% url 'index:index' %}">ZELNÝ TRH</a></div>
+        </div>
+    </header>
+    <main>
+        {% if error %}
+            <div class="message">{{ error }}</div>
+        {% endif %}
+        <div class="login" id="login" >
+            <form method="post">
+                {% csrf_token %}
+                {{ form }}
+                <br>
+                <input type="submit" value="Login" class="get_in" id="get_in">
+                <br>
+                <a class="signup" href="{% url 'index:sign_up' %}">Registrácia</a>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

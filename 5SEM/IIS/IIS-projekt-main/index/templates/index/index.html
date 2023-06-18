@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="sk" style="height: 110%">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{% static 'index/images/favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Zelný trh</title>
+</head>
+<body>
+    <header>
+        <div class="site_head" id="site_head">
+            <div><a class="LOGO" href="{% url 'index:index' %}">ZELNÝ TRH</a></div>
+        {% if logged_in %}
+            <div></div><a href="{% url 'index:login' %}"><span class="button">Odhlásenie</span></a></div>
+        {% else %}
+            <div><a href="{% url 'index:login' %}"><span class="button" >Login</span></a></div>
+        {% endif %}
+        </div>
+        <nav>
+            <a href="{% url 'index:offers' %}"><span class="button">Ponuka</span></a>
+            <a href="{% url 'index:harvests' %}"><span class="button">Zbery</span></a>
+            {% if logged_in %}
+                <a href="{% url 'index:cart' %}"><span class="button">Košík</span></a>
+                <a href="{% url 'index:profile' %}"><span class="button">Profil</span></a>
+            {% endif %}
+        </nav>
+    </header>
+    <main>
+        <div>
+            <div class="showcase">
+                    <h2>Najlepšie hodnotené plodiny:</h2>
+                    {% if top_crops %}
+                    <ul id="grid_show">
+                        {% for top_crop in top_crops %}
+                            <li><a href="{% url 'index:product_detail' top_crop.id %}">
+                                <div class="crop">
+                                    {% load static %}
+                                    <img src="{% static 'index/images/crops.png' %}" alt="Crop" width="100" height="100">
+                                    <span class="crop_name">
+                                        {{ top_crop.crop_name }}
+                                    </span>
+                                    <span class="crop_description">
+                                        Popis: {{ top_crop.description }}
+                                    </span>
+                                    <span class="crop_price">
+                                        Cena: {{ top_crop.price }}
+                                    </span>
+                                </div>
+                            </a></li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div>Žiadne hodnotenia plodín na zobrazenie.</div>
+                {% endif %}
+            </div>
+            <div class="showcase">
+                <h2>Najnovšie plodiny:</h2>
+                {% if new_crops %}
+                   <ul id="grid_show">
+                        {% for new_crop in new_crops %}
+                            <li><a href="{% url 'index:product_detail' new_crop.id %}">
+                                <div class="crop">
+                                    {% load static %}
+                                    <img src="{% static 'index/images/crops.png' %}" alt="Crop" width="100" height="100">
+                                    <span class="crop_name">
+                                        {{ new_crop.crop_name }}
+                                    </span>
+                                    <span class="crop_description">
+                                        Popis: {{ new_crop.description }}
+                                    </span>
+                                    <span class="crop_price">
+                                        Cena: {{ new_crop.price }} eur
+                                    </span>
+                                </div>
+                            </a></li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div>Žiadne nové plodiny na zobrazenie.</div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+</body>
+</html>

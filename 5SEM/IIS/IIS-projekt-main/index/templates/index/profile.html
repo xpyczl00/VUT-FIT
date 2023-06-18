@@ -1,0 +1,148 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="sk" >
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{% static 'index/images/favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Zelný trh - Profil</title>
+</head>
+<body>
+    <header>
+        <div  class="site_head" id="site_head">
+            <div><a class="LOGO" href="{% url 'index:index' %}">ZELNÝ TRH</a></div>
+            <div><a href="{% url 'index:login' %}"><span class="button">Odhlásenie</span></a></div>
+        </div>
+        <nav>
+            <a href="{% url 'index:offers' %}"><span class="button">Ponuka</span></a>
+            <a href="{% url 'index:harvests' %}"><span class="button">Zbery</span></a>
+            <a href="{% url 'index:cart' %}"><span class="button">Košík</span></a>
+        </nav>
+    </header>
+    <main>
+        {% if error %}
+        <div class="message">{{ error }}</div>
+    {% endif %}
+    {% if user %}
+        <div class="user">
+            <form method="post" class="haha" id="haha">
+                {% csrf_token %}
+                {{ form }}
+                <button type="submit" value="save" name="save" class="button">
+                    Uložiť zmeny
+                </button>
+            </form>
+            <br>
+            <form method="post" action="{% url 'index:profile' %}">
+                {% csrf_token %}
+                <button type="submit" value="delete" class="button" name="delete" onclick="return confirm('Naozaj chcete zrušiť svoj účet?');">
+                    Zmazať účet
+                </button>
+            </form>
+        </div>
+        <div id="categories">
+            {% if user.mod == True %}
+                <a href="{% url 'index:moderation' %}"><span class="button">Moderácia kategórií</span></a><br>
+            {% endif %}
+            <a href="{% url 'index:new_category' %}"><span class="button">Pridať kategóriu</span></a>
+        </div>
+        <h2>Moje plodiny:</h2>
+        <div id="user_crops">
+            <a href="{% url 'index:new_crop' 0 %}">
+                <button class="button">Pridať plodinu</button>
+            </a>
+            {% if crops %}
+                <!-- farmar123, smrtfrankom-->
+                <ul id="grid_show">
+                    {% for crop in crops %}
+                        <li><a href="{% url 'index:product_detail' crop.id %}">
+                            <div class="crop">
+                                <span class="crop_image">
+                                    {% load static %}
+                                    <img src="{% static 'index/images/crops.png' %}" alt="Crop" width="100" height="100">
+                                </span>
+                                <span class="crop_name">
+                                    {{ crop.crop_name }}
+                                </span>
+                                <span class="crop_description">
+                                    Popis: {{ crop.description }}
+                                </span>
+                                <span class="crop_price">
+                                    Cena: {{ crop.price }} eur
+                                </span>
+                            </div>
+                        </a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div> Zatiaľ neponúkate žiadne plodiny.</div>
+            {% endif %}
+        </div>
+        <h2>Moje Objednávky:</h2>
+        <div id="user_orders">
+            {% if orders %}
+                {% for order in orders %}
+                    <div class="order" id="order" >
+                        <span class="order_crop">
+                            Položka: {{ order.crop }},
+                        </span>
+                        <span class="order_price">
+                            Cena: {{ order.total_price }} eur
+                        </span>
+                        <span class="order_amount">
+                            Množstvo: {{ order.amount }} ks,
+                        </span>
+                        {% if farmer %}
+                            <span class="order_by">
+                                Od: {{ order.ordered_by }},
+                            </span>
+                        {% else %}
+                            <span class="order_farmer">
+                                Pre: {{ order.farmer }},
+                            </span>
+                        {% endif %}
+                        <span class="crop_state">
+                            Stav: {{ order.state }}
+                        </span>
+                        {% if order.state == 'pending' and farmer %}   <!--  Hloži nebi ma pls -->
+                            <form method="post" action="{% url 'index:profile'%}" class="order" >
+                                {% csrf_token %}
+                                <input type="hidden" name="order_id" value="{{ order.id }}">
+                                <input type="submit" name="confirm" value="Prijať" class="button">
+                                <input type="submit" name="refuse" value="Zrušiť" class="button">
+                            </form>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div> Zatiaľ nemáte žiadne objednávky.</div>
+            {% endif %}
+
+            <h2>Moje hodnotenia:</h2>
+                {% if reviews %}
+                    <div id="crop_reviews">
+                    {% for review in reviews %}
+                        <div class="review" id="review">
+                            <span>{{ review.crop }}: </span>
+                            <span class="title_stars" id="title_stars">{{ review.short_desc }}</span>
+                            <span>{{ review.long_desc }}</span>
+                            <span class="title_stars" id="title_stars">{{ review.stars }}/5</span>
+                                <form method="post" action="{% url 'index:profile' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="review_id" value="{{ review.id }}">
+                                    <button type="submit" value="true" class="button" name="del_review"
+                                            onclick="return confirm('Naozaj chcete odstrániť toto hodnotenie?');">
+                                            Zmazať hodnotenie
+                                    </button>
+                                </form>
+                        </div>
+                    {% endfor %}
+                    </div>
+                    {% else %}
+                    <div> Zatiaľ nemáte žiadne hodnotenia.</div>
+                {% endif %}
+        </div>
+    {% endif %}
+    </main>
+</body>
+</html>

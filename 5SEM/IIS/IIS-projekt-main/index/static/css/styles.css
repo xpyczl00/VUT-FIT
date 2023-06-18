@@ -1,0 +1,323 @@
+body {
+  font-family: verdana;
+  background: rgb(4,36,0) linear-gradient(176deg, rgba(4, 36, 0, 1) 0%, rgba(45, 121, 9, 1) 40%, rgba(159, 255, 0, 1) 100%);
+  padding: 15px;
+    background-size: contain;
+}
+.message{
+  font-size: xx-large;
+  text-align: center;
+  border: 2px solid black;
+
+}
+
+#order{
+    border: 2px solid black;
+    margin-bottom: 3px;
+}
+
+.site_head{
+    display: flex;
+    justify-content: space-between;
+}
+
+.LOGO{
+  font-size: xx-large;
+  display: flex;
+  justify-content: space-between;
+  color: black;
+    background: #006b1b;
+    border: 3px solid black;
+    width: 181px;
+    text-align: center;
+}
+
+.LOGO:hover {
+    background: #79a641;
+}
+
+.crop, .harvest{
+  padding:0 5px;
+  text-align: center;
+  border: 2px solid black;
+  margin: 5px;
+  background: #79a641
+}
+
+.crop_name, .crop_price, .crop_description{
+  font-size: 20px;
+  white-space: pre-line;
+
+}
+
+.harvest_date, .harvest_place, .harvest_description,
+.harvest_max, .harvest_current, .harvest_crop, .harvest_farmer{
+  font-size: 20px;
+  white-space: pre-line;
+}
+
+.login , .more{
+    height: 520px;
+    width: 400px;
+    background-color: rgba(255,255,255,0.13);
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 55%;
+    left: 50%;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    padding: 50px 35px;
+}
+
+
+.new_crop{
+    max-height: 100%;
+    width: 400px;
+    background-color: rgba(255,255,255,0.13);
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 70%;
+    left: 50%;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255,255,255,0.1);
+    box-shadow: 0 0 40px rgba(8,7,16,0.6);
+    padding: 50px 35px;
+}
+
+#login input:not([type = "checkbox"]){
+    display: block;
+    height: 50px;
+    width: 380px;
+    background-color: rgba(255,255,255,0.07);
+    border-radius: 3px;
+    padding: 0 10px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 300;
+}
+#haha input:not([type = "checkbox"]){
+    display: block;
+    height: 50px;
+    width: 380px;
+    background-color: rgba(255,255,255,0.07);
+    border-radius: 3px;
+    padding: 0 10px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+#more input:not([type = "checkbox"]){
+    display: block;
+    height: 50px;
+    width: 380px;
+    background-color: rgba(255,255,255,0.07);
+    border-radius: 3px;
+    padding: 0 10px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+#new_crop input:not([type = "checkbox"]){
+    display: block;
+    height: 50px;
+    width: 380px;
+    background-color: rgba(255,255,255,0.07);
+    border-radius: 3px;
+    padding: 0 10px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 300;
+}
+.showcase{
+    margin-right: 10px;
+}
+
+#grid_show {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    grid-row-gap: 10px;
+}
+
+ul
+{
+  display:table;
+  list-style:none;
+  width: auto;
+  text-align: center;
+    border-collapse: separate;
+}
+
+ul li{
+    max-width: 200px;
+    height: auto;
+    width: auto;
+  display: table-cell;
+  padding: 5px;
+  margin: 0 3px;
+  background: #79a641;
+  text-align: center;
+    min-height:200px;
+    min-width: 300px;
+}
+
+a:link,a:hover, a:visited,a:active{
+  text-decoration: None;
+  text-align: center;
+  color: black;
+}
+
+ li:hover{
+   text-decoration: None;
+   background: #bee883;
+ }
+
+h2 {
+    color: #1b1b1b;
+}
+
+ #login .get_in, .button, .signup, .confirm, .refuse {
+  background-color: #79a641;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  color: black;
+  border: 2px solid black;
+  margin: 5px;
+    cursor: pointer;
+}
+
+
+
+
+#form .order{
+    background-color: #79a641;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  color: black;
+  border: 2px solid black;
+    margin-bottom: 5px;
+
+}
+.confirm:hover{
+    background-color: green;
+}
+
+.refuse:hover{
+    background-color: red;
+}
+
+#login .get_in:hover ,.button:hover{
+   background: #bee883;
+}
+
+.signup {
+  width: 335px;
+  height: 15px;
+}
+#more .signup:hover, #login .signup:hover {
+   background: #bee883;
+}
+
+#new_crop .button{
+    margin-left: 120px;
+    margin-top: 20px;
+}
+
+.table_header{
+    width: 200%;
+}
+
+.table_form label, .table_header label{
+    border: 3px dashed black;
+    height: 100%;
+    padding: 5px 40px;
+    min-width: 140px;
+    min-height: 20px;
+    display: inline-block;
+    float: left;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    text-align: center;
+
+}
+
+ .table_header label{
+     border: 3px  solid black;
+ }
+
+.table_form{
+    display: table;
+    width: 200%;
+}
+.toggle{
+    background-color: #79a641;
+  padding: 5px 40px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+    float: left;
+  font-size: 16px;
+  color: black;
+  border: 2px solid black;
+  margin: 0 25px ;
+
+    min-width: 180px;
+
+}
+
+.toggle:hover{
+   background: #bee883;
+}
+#crop_reviews .review  {
+    border: 3px solid black;
+    text-align: center;
+    margin-bottom: 5px;
+    text-wrap: none;
+    padding: 0 40px;
+    white-space: nowrap;
+
+}
+
+#review .title_stars{
+    font-weight: bold;
+    font-size: large;
+}
+
+.order_list{
+    display: flex;
+    border: 3px solid black;
+    justify-content: space-between;
+}
+
+.admin_menu{
+    display: inline-flex;
+    flex-direction: column;
+}
+
+.admin_menu_item{
+    background-color: #79a641;
+    padding: 5px 40px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    float: left;
+    font-size: 16px;
+    color: black;
+    border: 2px solid black;
+    margin: 0 25px ;
+    max-width: 200px;
+}

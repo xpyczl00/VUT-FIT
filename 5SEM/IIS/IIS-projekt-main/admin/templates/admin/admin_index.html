@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="cs" style="height: 100vh">
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<link rel="shortcut icon" href="{% static 'index/images/favicon.ico' %}"/>
+<head>
+    <meta charset="UTF-8">
+    <title>IS Zelny trh - admin</title>
+</head>
+<body>
+    <header>
+        <div  class="site_head" id="site_head">
+            <div><a class="LOGO" href="{% url 'admin:index' %}">ZELNÝ TRH</a></div>
+        {% if admin %}
+            <div><a href="{% url 'admin:login' %}"><span class="button">Odhlásenie</span></a></div>
+        {% else %}
+            <div><a href="{% url 'admin:login' %}"><span class="button" >Login</span></a></div>
+        {% endif %}
+        </div>
+    </header>
+    <main>
+        <nav class="admin_menu">
+            <a href="{% url 'admin:users' %}">
+                <span class="admin_menu_item">
+                    <label>
+                        Users
+                    </label>
+                </span>
+            </a>
+            <a href="{% url 'admin:crops' %}">
+                <span class="admin_menu_item">
+                    <label>
+                        Crops
+                    </label>
+                </span>
+            </a>
+            <a href="{% url 'admin:orders' %}">
+                <span class="admin_menu_item">
+                    <label>
+                        Orders
+                    </label>
+                </span>
+            </a>
+            <a href="{% url 'admin:harvests' %}">
+                <span class="admin_menu_item">
+                    <label>
+                        Harvests
+                    </label>
+                </span>
+            </a>
+            <a href="{% url 'admin:categories' %}">
+                <span class="admin_menu_item">
+                    <label>
+                        Categories
+                    </label>
+                </span>
+            </a>
+            <a href="{% url 'admin:reviews' %}">
+                <span class="admin_menu_item">
+                    <label>
+                        Reviews
+                    </label>
+                </span>
+            </a>
+            <a href="{% url 'admin:admins' %}">
+                <span class="admin_menu_item">
+                    <label>
+                        Admins
+                    </label>
+                </span>
+            </a>
+        </nav>
+    </main>
+</body>
+</html>

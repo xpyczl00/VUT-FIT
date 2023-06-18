@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="sk"  style="height: 100vh">
+<head>
+    <style>
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 40%;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="shortcut icon" href="{% static 'index/images/favicon.ico' %}"/>
+    <title>Stránka nenájdená</title>
+</head>
+<body>
+    <header>
+        <div class="site_head" id="site_head">
+            <div><a class="LOGO" href="{% url 'index:index' %}">ZELNÝ TRH</a></div>
+        </div>
+    </header>
+    <main>
+        <p style="text-align:center; font-size:200%">404 - Stránka, ktorú sa pokúšate navštíviť, neexistuje.</p>
+        <p>
+            {% load static %}
+            <img src="{% static 'index/images/sad.png' %}" alt="smutny_smajlik" class="center">
+        </p>
+    </main>
+</body>
+</html>

@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="sk" style="height: 110%">
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<link rel="shortcut icon" href="{% static 'index/images/favicon.ico' %}"/>
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{% static 'index/images/favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Zelný trh - Nákupný  košík</title>
+</head>
+<body>
+    <header>
+
+        <div  class="site_head" id="site_head">
+            <div><a class="LOGO" href="{% url 'index:index' %}">ZELNÝ TRH</a></div>
+            <div><a href="{% url 'index:login' %}"><span class="button">Odhlásenie</span></a></div>
+        </div>
+        <nav>
+            <a href="{% url 'index:offers' %}"><span class="button">Ponuka</span></a>
+            <a href="{% url 'index:harvests' %}"><span class="button">Zbery</span></a>
+            <a href="{% url 'index:profile' %}"><span class="button">Profil</span></a>
+        </nav>
+    </header>
+    <main>
+        {% if error %}
+                <div class="message">{{ error }}</div>
+        {% endif %}
+        {% if orders %}
+            <ul class="order_list">
+                {% for order in orders %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="crop_id" value="{{ order.id }}">
+                        <label>{{ order.name }}</label>,
+                        <label>{{ order.amount }}</label> ks
+                        <label>{{ order.price }}</label> eur
+                        <input type="submit" name="delete_one" value="Delete from order" class="button">
+                    </form>
+                {% endfor %}
+            </ul>
+            <label> Celková suma: {{ total }} eur </label>
+            <form method="post">
+                {% csrf_token %}
+                <input type="submit" name="order" value="Objednaj všetky" class="button"><br>
+                <input type="submit" name="delete_order" value="Vymaž celú objednávku" class="button">
+            </form>
+        {% else %}
+            <div>
+                <h1>
+                    Zatiaľ nemáte žiadne objednávky.
+                </h1>
+                <label>
+                    Plodiny si môžete prezerať v <a style="text-decoration: underline" href="{% url 'index:offers' %}"><strong>momentálnej ponuke</strong></a>
+                </label>
+            </div>
+        {% endif %}
+    </main>
+</body>
+</html>

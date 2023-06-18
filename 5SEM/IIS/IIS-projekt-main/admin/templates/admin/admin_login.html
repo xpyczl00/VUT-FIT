@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="cs" style="height: 100vh">
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<link rel="shortcut icon" href="{% static 'index/images/favicon.ico' %}"/>
+<head>
+    <meta charset="UTF-8">
+    <title>Admin login page</title>
+</head>
+<body>
+    <main>
+        {% if error %}
+            <div>{{ error }}</div>
+        {% endif %}
+        <div class="login" id="login" >
+            <form method="post">
+                {% csrf_token %}
+                {{ form }}
+                <br>
+                <input type="submit" value="Login" class="signup">
+            </form>
+        </div>
+    </main>
+</body>
+</html>

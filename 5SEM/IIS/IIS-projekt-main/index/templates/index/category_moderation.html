@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="sk" style="height: 100vh">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{% static 'index/images/favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Zelný trh - Moderácia</title>
+</head>
+<body>
+    <header>
+        <div class="site_head" id="site_head">
+            <div><a class="LOGO" href="{% url 'index:index' %}">ZELNÝ TRH</a></div>
+            <div><a href="{% url 'index:login' %}"><span class="button">Odhlásenie</span></a></div>
+        </div>
+        <nav>
+            <a href="{% url 'index:offers' %}"><span class="button">Ponuka</span></a>
+            <a href="{% url 'index:harvests' %}"><span class="button">Zbery</span></a>
+            <a href="{% url 'index:cart' %}"><span class="button">Košík</span></a>
+            <a href="{% url 'index:profile' %}"><span class="button">Profil</span></a>
+
+        </nav>
+    </header>
+    <main>
+        {% if categories %}
+        <div class="table_header" id="table_header">
+        <br>
+            <label>ID Kategorie</label>
+            <label>Názov Kategorie</label>
+            <label> Kategoria pre </label>
+            <label>Je schválena</label>
+            <label>Prepnuť</label>
+        </div>
+        <div>
+            {% for cat in categories %}
+            <form method="post" id="table_form" class="table_form">
+                {% csrf_token %}
+                <input type="hidden" name="cat_id" value="{{ cat.id }}">
+                <label>{{ cat.id }}</label>
+                <label>{{ cat.category_name }}</label>
+                <label>{{ cat.category_of_id }}</label>
+                <label>{{ cat.approved }}</label>
+                {% if cat.approved %}
+                    <input type="submit" name="disallow" value="disallow" class="toggle">
+                {% else %}
+                    <input type="submit" name="approve" value="approve" class="toggle">
+                {% endif %}
+            </form>
+            {% endfor %}
+        {% else %}
+            <label>Neexistuju žiadne položky vyhovojúce danym kritériam.</label>
+        {% endif %}
+        </div>
+    </main>
+</body>
+</html>

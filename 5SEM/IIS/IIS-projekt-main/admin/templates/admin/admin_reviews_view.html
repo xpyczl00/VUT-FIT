@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="cs" style="height: 100vh">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="shortcut icon" href="{% static 'index/images/favicon.ico' %}"/>
+    <title>IS Zelny trh - admin - reviews</title>
+</head>
+</html>
+<body>
+    {% load db_plug %}
+    <header>
+        <div  class="site_head" id="site_head">
+            <div><a class="LOGO" href="{% url 'admin:index' %}">ZELNÝ TRH</a></div>
+        {% if admin %}
+            <div><a href="{% url 'admin:login' %}"><span class="button">Odhlásenie</span></a></div>
+        {% else %}
+            <div><a href="{% url 'admin:login' %}"><span class="button" >Login</span></a></div>
+        {% endif %}
+        </div>
+    </header>
+    <main>
+        {% if reviews %}
+            <div>
+                <div class="table_header">
+                    <label>Review ID</label>
+                    <label>Crop name</label>
+                    <label>User</label>
+                    <label>Title</label>
+                    <label>Stars</label>
+                    <label>Delete</label>
+                </div>
+                {% for review in reviews %}
+                    <form method="post" class="table_form">
+                        {% csrf_token %}
+                        <input type="hidden" name="review_id" value="{{ review.id }}">
+                        <label>{{ review.id }}</label>
+                        <label>{% get_crop_name review.crop %}</label>
+                        <label>{% get_user_name review.reviewed_by %}</label>
+                        <label>{{ review.short_desc }}</label>
+                        <label>{{ review.stars }}</label>
+                        <input type="submit" name="delete" value="delete" class="toggle">
+                    </form>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div>Nothing to show for now</div>
+        {% endif %}
+    </main>
+</body>
+</html>

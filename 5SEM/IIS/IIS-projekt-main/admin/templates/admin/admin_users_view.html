@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="cs" style="height: 100vh">
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<link rel="shortcut icon" href="{% static 'index/images/favicon.ico' %}"/>
+<head>
+    <meta charset="UTF-8">
+    <title>IS Zelny trh - admin - users</title>
+</head>
+<body>
+    <header>
+                <div  class="site_head" id="site_head">
+            <div><a class="LOGO" href="{% url 'admin:index' %}">ZELNÝ TRH</a></div>
+        {% if admin %}
+            <div><a href="{% url 'admin:login' %}"><span class="button">Odhlásenie</span></a></div>
+        {% else %}
+            <div><a href="{% url 'admin:login' %}"><span class="button" >Login</span></a></div>
+        {% endif %}
+        </div>
+    </header>
+    {% if users %}
+        <div>
+            <div class="table_header">
+                <label>User ID</label>
+                <label>Username</label>
+                <label>E-mail</label>
+                <label>User is mod</label>
+                <label>Toggle moderation</label>
+                <label>Delete user</label>
+            </div>
+            {% for user in users %}
+                <form method="post" action="{% url "admin:users" %}" id="table_form" class="table_form">
+                    {% csrf_token %}
+                    <input type="hidden" name="user_id" value="{{ user.id }}">
+                    <label>{{ user.id }}</label>
+                    <label>{{ user.user_name }}</label>
+                    <label>{{ user.email }}</label>
+                    <label>{{ user.mod }}</label>
+                    {% if user.mod %}
+                        <input type="submit" name="unmake_mod" value="Unmake mod" class="toggle">
+                    {% else %}
+                        <input type="submit" name="make_mod" value="Make mod" class="toggle">
+                    {% endif %}
+                    <input type="submit" name="delete" value="Delete" class="toggle">
+                </form>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div>
+            <label>Nothing to show for now</label>
+        </div>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="sk" style="height: 110%">
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<link rel="shortcut icon" href="{% static 'index/images/favicon.ico' %}"/>
+<head>
+
+    <meta charset="UTF-8">
+    <title>Zelný trh - Detail zberu</title>
+
+</head>
+    <body>
+    <header>
+        <div class="site_head" id="site_head">
+            <div><a class="LOGO" href="{% url 'index:index' %}">ZELNÝ TRH</a></div>
+        {% if user %}
+            <div><a href="{% url 'index:login' %}"><span class="button">Odhlásenie</span></a></div>
+        {% else %}
+            <div><a href="{% url 'index:login' %}"><span class="button" >Login</span></a></div>
+        {% endif %}
+        </div>
+
+            <span class="button"><a href="{% url 'index:offers' %}">Ponuka</a></span>
+            <span class="button"><a href="{% url 'index:harvests' %}">Zbery</a></span>
+        {% if user %}
+            <span class="button"><a href="{% url 'index:profile' %}">Profil</a></span>
+            <span class="button"><a href="{% url 'index:login' %}">Odhlásenie</a></span>
+        {% else %}
+            <span class="button"><a href="{% url 'index:login' %}">Login</a></span>
+        {% endif %}
+    </header>
+    <main>
+            {% if error %}
+        <div class="message">{{ error }}</div>
+    {% endif %}
+            <h1>Detaily zberu:</h1>
+                {% if harvest %}
+                <div class = "harvest">
+                                    <label class="harvest_date">
+                                       Dátum: {{ harvest.date }}
+                                    </label>
+                                    <label  class="harvest_place">
+                                        Miesto: {{ harvest.place }}
+                                    </label>
+                                    <label  class="harvest_description">
+                                        Popis: {{ harvest.description }}
+                                    </label>
+                                    <label  class="harvest_max">
+                                        Maximum: {{ harvest.max_occupancy }} osôb
+                                    </label>
+                                    <label  class="harvest_current">
+                                        Zúčastnených: {{ harvest.current_occupancy }} osôb {% if attending %} <span style="color: green">-Prihlasený</span>{% endif %}
+                                    </label>
+                                    <label  class="harvest_crop">
+                                        Plodina: {{ harvest.crop }}
+                                    </label>
+                                    <label  class="harvest_farmer">
+                                        Farmár: {{ harvest.farmer }}
+                                    </label>
+                                </div>
+                {% else %}
+                    <div>Neexistuju žiadne položky vyhovojúce danym kritériam.</div>
+                {% endif %}
+                {% if user and not farmer%}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div>
+                            {% if not attending %}
+                         <button type="submit" value="attend" name="attend" class="button">
+                             Prihlásiť sa na zber
+                        </button>
+                            {% else %}
+                        <button type="submit" value="leave" name="leave" class="button">
+                             Odhlásiť sa zo zberu
+                        </button>
+                            {% endif %}
+                        </div>
+                    </form>
+
+                {% else %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <div>
+                            <span class="button"><a href="{% url 'index:new_harvest' harvest.id %}">Upraviť zber</a></span>
+                            <button type="submit" class="button" name="delete" onclick="return confirm('Naozaj chcete zrušiť tento zber?');">
+                                Zmazať zber
+                            </button>
+                        </div>
+                    </form>
+
+                {% endif %}
+
+    </main>
+    </body>
+</html>
+

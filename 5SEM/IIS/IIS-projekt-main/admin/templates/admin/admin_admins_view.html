@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="cs" style="height: 100vh">
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<link rel="shortcut icon" href="{% static 'index/images/favicon.ico' %}"/>
+<head>
+    <meta charset="UTF-8">
+    <title>IS Zelny trh - admin - admins</title>
+</head>
+<body>
+    <header>
+        <div  class="site_head" id="site_head">
+            <div><a class="LOGO" href="{% url 'admin:index' %}">ZELNÝ TRH</a></div>
+        {% if admin %}
+            <div><a href="{% url 'admin:login' %}"><span class="button">Odhlásenie</span></a></div>
+        {% else %}
+            <div><a href="{% url 'admin:login' %}"><span class="button" >Login</span></a></div>
+        {% endif %}
+        </div>
+    </header>
+        <div class="login" id="login" >
+        <form method="post" >
+            {% csrf_token %}
+            {{ form }}
+            <input type="submit" name="create_admin" value="Vytvoriť admina" class="get_in">
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="cs" style="height:100%">
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+<link rel="shortcut icon" href="{% static 'index/images/favicon.ico' %}"/>
+<head>
+    <meta charset="UTF-8">
+    <title>IS Zelný trh - admin - crops</title>
+</head>
+<body>
+    {% load db_plug %}
+    <header>
+        <div  class="site_head" id="site_head">
+            <div><a class="LOGO" href="{% url 'admin:index' %}">ZELNÝ TRH</a></div>
+        {% if admin %}
+            <div><a href="{% url 'admin:login' %}"><span class="button">Odhlásenie</span></a></div>
+        {% else %}
+            <div><a href="{% url 'admin:login' %}"><span class="button" >Login</span></a></div>
+        {% endif %}
+        </div>
+    </header>
+    {% if crops %}
+        <div class="table_header">    <!-- I had to do it to them-->
+            <label>Crop ID</label>
+            <label>Name</label>
+            <label>Farmer ID</label>
+            <label>Category</label>
+            <label>Price</label>
+            <label>Weight/Pieces</label>
+            <label>Place of origin</label>
+            <label>Crop year</label>
+            <label>Delete crop</label>
+        </div>
+        {% for crop in crops %}
+            <form method="post" id="table_form" class="table_form">
+                {% csrf_token %}
+                <input type="hidden" name="crop_id" value="{{ crop.id }}">
+                <label>{{ crop.id }}</label>
+                <label>{{ crop.crop_name }}</label>
+                <label>{% get_user_name crop.farmer %}</label>
+                <label>{% get_category_name crop.category %}</label>
+                <label>{{ crop.price }}€</label>
+                {% if crop.price_type == "perkg" %}
+                    <label>{{ crop.amount }}kg</label>
+                {% else %}
+                    <label>{{ crop.amount }}pc</label>
+                {% endif %}
+                <label>{{ crop.origin }}</label>
+                <label>{{ crop.crop_year}}</label>
+                <input type="submit" name="delete" value="Delete" class="toggle" id="toggle">
+            </form>
+        {% endfor %}
+    {% else %}
+        <label>Nothing to show</label>
+    {% endif %}
+</body>
+</html>
