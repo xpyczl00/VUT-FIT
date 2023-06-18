@@ -1,0 +1,329 @@
+#!/bin/sh
+
+export POSIXLY_CORRECT=yes
+export LC_NUMERIC=en_US.UTF-8
+
+#HELP FUNCTION
+
+get_help()
+{
+    echo "................................................................."
+    echo "USAGE : ./tradelog  -h|--help] [FILTR] [PŘÍKAZ] [LOG [LOG2 [...]] " 
+    echo "................................................................."
+    echo "                       [FILTR]"
+    echo "................................................................."
+    echo "[-w WIDTH]    -paramether for graph-pos/hist-ord  [POS]"
+    echo "[-t TICKER]   -wanted stock" 
+    echo "[-b DATETIME] -transactions after "
+    echo "[-a DATETIME] -transactions before"
+    echo "[-h|--help]    -brief manual "
+    echo "................................................................."
+    echo "                     [COMMAND]"
+    echo "................................................................."
+    echo "[pos]-values of held positions"
+    echo "[last-price]- last price of every ticker "
+    echo "[profit]- total profit"
+    echo "[list-tick]- list of tickers"
+    echo "[graph-pos]- graph of held positions for every ticker"
+    echo "[hist-ord]- histograph of number of transactions for every ticker"
+    echo "................................................................."
+    echo "                     [LOG [LOG2 [...]]"
+    echo "................................................................."
+    echo "name of file (.log/.log.gz)"
+    echo "................................................................."
+
+}
+
+#VARIABLES
+
+FILE=""
+COMM=""
+FROM=""
+DATETIME=""
+OUTPUT=""
+TICKERS=""
+WIDTH=""
+file="x"
+i=0
+p=0
+
+#VARIABLES GETTING WHILE/ FILTERS,COMMANDS
+
+while [ "$#" -gt 0 ]
+do
+    case "$1" in
+list-tick | profit | pos | last-price | hist-ord | graph-pos )
+    COMM="$1"
+    shift
+    ;;
+
+*.log)
+    FILE=$(cat "$1")
+    shift
+    ;;
+
+*.log.gz)
+    FILE=$(gzip -c -d "$1")
+    shift
+    ;;
+
+-h | --help)
+    get_help
+    exit 0
+    ;;
+
+-w)
+    WIDTH="$2"
+    if [ "$WIDTH" -le 0 ];then
+    echo "WIDTH CANNOT BE NEGATIVE"
+    exit 0
+    fi
+    shift
+    shift
+    ;;
+
+-t) 
+    if [ "$i" = 0 ] ; then
+    TICKERS=" $2 "
+    i=$((i+1))
+    else
+    TICKERS="$TICKERS $2 "
+    i=$((i+1))
+    fi
+    shift
+    shift 
+    ;;
+
+-a | -b)
+    FROM="$1"
+    DATETIME="$2"
+    shift
+    shift
+    ;;
+
+*)  
+    shift
+    ;;
+
+esac
+done
+if [ -z "$FILE" ] ; then
+    while [ -n "$file" ]
+    do
+        read file
+        FILE="$FILE\n$file"
+    done
+fi
+
+OUTPUT=$(echo "$FILE"| grep .)
+
+#TICKER FILTER
+
+if [ "$TICKERS" != "" ] ; then
+
+    OUTPUT=$(echo "$OUTPUT" | awk -F ';' -v tic="$TICKERS" ' 
+    {
+        ticker=" " $2 " "
+        if(tic ~ ticker)
+            print $0
+    }')
+fi
+
+#DAYTIME FILTER
+
+if [ "$FROM" = "-b" ] ; then 
+    OUTPUT=$(echo "$OUTPUT" | awk -F ';' -v time="$DATETIME" '
+    {
+        if($1<time)
+            print 
+    }')
+fi
+
+if [ "$FROM" = "-a" ] ; then
+    OUTPUT=$(echo "$OUTPUT" | awk -F ';' -v time="$DATETIME" '
+    {
+        if($1>(time))
+            print 
+    }')
+fi
+
+#COMMAND EXECUTION
+
+case "$COMM" in
+
+#LIST OF TICKERS
+
+list-tick)
+    OUTPUT=$(echo "$OUTPUT" | awk -F ';' '{print $2}' | sort -u)
+    break
+    ;;
+
+#PROFIT USING COUNTER
+
+profit)
+    OUTPUT=$(echo "$OUTPUT"| awk -F ';' -v count=0 '
+    { 
+        if ($3=="sell")
+        {
+            count = count + ($4*$6)
+        }
+
+        else if ($3 == "buy")
+        {
+            count = count - ($4*$6)
+        } 
+    }
+    END{
+        printf ("%.2f\n",count)
+    }')
+
+    break
+    ;;
+
+#LAST PRICE USING ARRAY
+
+last-price)
+    OUTPUT=$(echo "$OUTPUT" | awk -F ';'  '
+    {
+        last_price[$2]=$4
+    }
+    END{
+        max_length=0
+
+        for (i in last_price)
+        {
+            if(length(last_price[i])>max_length)
+            max_length=length(last_price[i])
+        }
+
+        for (i in last_price)
+        printf("%9-s : %*.2f\n",i,max_length,last_price[i])
+    }
+    '| sort -u )
+    break
+    ;;
+pos)
+    #POS USING ARRAY AND MAX LENGTH FOR ALLIGNMENT
+
+    OUTPUT=$(echo "$OUTPUT" | awk -F ';'  '
+    {
+        last_price[$2]=$4
+        if ($3=="sell")
+            {
+                objem[$2]= objem[$2] -$6
+            }
+            else if ($3 == "buy")
+            {
+                objem[$2]=objem[$2]+$6
+            } 
+    }
+    END{
+        neg=false
+        max_length=0
+
+        for (i in last_price){
+            pos[i]=objem[i]*last_price[i]
+            current=pos[i]
+            
+            if(current<0)
+                current=current*(-1)
+            
+            if(length(current)>max_length){
+                max_length=length(pos[i])
+            }
+        }
+        for (i in last_price){
+            printf("%9-s : ",i)
+            printf("%*.2f\n",max_length,pos[i])
+        }
+    }
+    '| sort -t: -k 2,2 -n -r)
+    break
+    ;;
+
+hist-ord)
+#HIST ORD - USING FOR TO WRITE WANTED NUMBER OF CHARS
+
+    OUTPUT=$(echo "$OUTPUT"| awk -F ';' -v max=0 -v w="$WIDTH" '
+    {
+        count[$2] = count[$2]+1
+    }
+    END{
+        for (i in count){
+            if(count[i]>max)
+                max=count[i]
+        }
+
+        for (i in count){
+            printf("%10-s: ",i)
+            if(w!="")
+                times=count[i]*w/max
+            else 
+                times=count[i]
+            for(x=1;x<=times;x++)
+                printf("#")  
+                printf("\n")
+        }
+    }'| sort -u)
+    break
+    ;;
+    
+graph-pos)
+
+#GRAPH POS- USING FOR CYCLE AND ARRAY TO PRINT WANTED NUMBER OF CHARS
+    
+    if [ "$WIDTH" = "" ];then
+        WIDTH=1000
+    fi
+    OUTPUT=$(echo "$OUTPUT" | awk -F ';'  -v w="$WIDTH" '
+    {
+        last_price[$2]=$4
+        if ($3=="sell")
+        {
+            objem[$2]= objem[$2] -$6
+        }
+        else if ($3 == "buy")
+        {
+            objem[$2]=objem[$2]+$6
+        } 
+    }
+    END {
+        max=0
+        current=0
+        
+        for (i in last_price){
+            pos[i]=objem[i]*last_price[i]
+            current=pos[i]
+            
+            if(pos[i]<0)
+                current=pos[i]*(-1)
+            if(max<current)
+                max=current
+        }
+
+        for (i in last_price){
+            graph=pos[i]*w/max
+            char="#"
+            
+            if(graph<0){
+                graph=graph*(-1)
+                char="!"
+            }
+            printf("%10-s: ",i)
+            
+            for(x=1;x<=graph;x++){
+
+                printf("%c",char)
+            }
+            printf("\n") 
+        }
+    }'| sort -u )
+    break
+    ;;
+*)
+    break
+    ;;
+esac
+
+echo "$OUTPUT"
+
