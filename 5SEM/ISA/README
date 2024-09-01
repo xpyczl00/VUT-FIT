@@ -1,0 +1,86 @@
+# Popis programu
+
+Foobar is a Python library for dealing with word pluralization.
+
+# Preklad programu
+
+Použitím príkazu 'make' sa spusti preklad programu.
+
+```bash
+make
+```
+
+## Spustenie aplikácie
+
+Spuštění aplikace
+```bash
+./dns [-r] [-x] [-6] -s server [-p port] adresa'
+```
+
+Pořadí parametrov je ľubovolne. Popis parametrov:
+
+    -r: Požadována rekurze (Recursion Desired = 1), jinak bez rekurze.
+    -x: Reverzní dotaz místo přímého.
+    -6: Dotaz typu AAAA místo výchozího A.
+    -s: IP adresa nebo doménové jméno serveru, kam se má zaslat dotaz.
+    -p port: Číslo portu, na který se má poslat dotaz, výchozí 53.
+    adresa: Dotazovaná adresa.
+
+
+## Formát výstupu
+```
+Authoritative: Yes/No, Recursive: Yes/No, Truncated: Yes/No
+Question section (number of questions)
+  domain name, type of the query, class of the query
+  ...
+Answer section (number of questions)
+  domain name, type of the query, class of the query, TTL, resource data
+  ...
+Authority section (number of authority section records)
+  domain name, type of the query, class of the query, TTL, resource data
+  ...
+Additional section (number of additional section recors)
+  domain name, type of the query, class of the query, TTL, resource data
+  ...
+```
+
+## Príklady spustenia programu
+```
+$ dns -r -s kazi.fit.vutbr.cz www.fit.vut.cz
+Authoritative: No, Recursive: Yes, Truncated: No
+Question section (1)
+  www.fit.vut.cz., A, IN
+Answer section (1)
+  www.fit.vut.cz., A, IN, 14400, 147.229.9.26
+Authority section (0)
+Additional section (0)
+```
+```
+$ dns -r -s kazi.fit.vutbr.cz www.github.com
+Authoritative: No, Recursive: Yes, Truncated: No
+Question section (1)
+  www.github.com., A, IN
+Answer section (2)
+  www.github.com., CNAME, IN, 3600, github.com.
+  github.com., A, IN, 60, 140.82.121.3
+Authority section (0)
+Additional section (0)
+```
+
+# Testy
+Testy sa spustia príkazom:
+```bash
+make test
+```
+ich výstup je následovne porovnávaný s výstupom programu :
+
+```bash
+dig
+``` 
+# Autor
+Lukasz Pycz, xpyczl00
+# Odovzdané súbory
+* dns.c
+* Makefile
+* manual.pdf
+* README
